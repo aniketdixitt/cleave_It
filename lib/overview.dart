@@ -14,7 +14,7 @@ class Overview extends StatefulWidget {
 
 class _OverviewState extends State<Overview> {
   int _currentIndex = 0;
-  List screens = [Home(), AccountScreen(), Home(), Home()];
+  List screens = [Home(), Home(), Home(), AccountScreen()];
   @override
   _updateIndex(int value) {
     setState(() {
