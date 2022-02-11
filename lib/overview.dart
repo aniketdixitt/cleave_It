@@ -1,4 +1,6 @@
 import 'package:cleave_it/routing.dart';
+import 'package:cleave_it/screens/friends.dart';
+import 'package:cleave_it/screens/groups.dart';
 import 'package:cleave_it/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -14,7 +16,7 @@ class Overview extends StatefulWidget {
 
 class _OverviewState extends State<Overview> {
   int _currentIndex = 0;
-  List screens = [Home(), Home(), Home(), AccountScreen()];
+  List screens = [Home(), Friends(), Groups(), AccountScreen()];
   @override
   _updateIndex(int value) {
     setState(() {

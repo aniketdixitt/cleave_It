@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cleave_it/routing.dart' as routing;
 import 'package:pie_chart/pie_chart.dart';
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -13,15 +14,106 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  void show(BuildContext context) {
+    showModalBottomSheet<void>(
+        isScrollControlled: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25.0),
+        ),
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.7,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                color: Colors.brown[200]),
+            //color: Colors.brown[200],
+            child: Column(
+              children: [
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.2,
+                        child: TextField(
+                          textAlign: TextAlign.center,
+                          decoration: InputDecoration(
+                              hintText: "₹ 0",
+                              hintStyle: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize:
+                                    MediaQuery.of(context).size.width * 0.08,
+                                color: Colors.black,
+                              )),
+                        ),
+                      ),
+                      Container(
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: TextField(
+                            textAlign: TextAlign.center,
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.monetization_on),
+                              hintText: "What is this expense for?",
+                              hintStyle: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize:
+                                    MediaQuery.of(context).size.width * 0.05,
+                              ),
+                            ),
+                          ))
+                    ],
+                  ),
+                ),
+
+                /*Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.red[300],
+                  ),
+                  padding: EdgeInsets.fromLTRB(
+                      MediaQuery.of(context).size.width * 0.01,
+                      MediaQuery.of(context).size.height * 0.01,
+                      MediaQuery.of(context).size.width * 0.01,
+                      MediaQuery.of(context).size.height * 0.01),
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  height: MediaQuery.of(context).size.height * 0.15,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        child: Image.asset('images/people.png'),
+                        height: MediaQuery.of(context).size.height * 0.09,
+                        width: MediaQuery.of(context).size.width * 0.09,
+                      ),
+                      Expanded(
+                        child: Text(
+                          "Splitting with...",
+                          style: TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                    ],
+                  ),
+                )*/
+              ],
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       floatingActionButton: SizedBox(
-        width: width * 0.3,
+        width: width * 0.35,
         child: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            show(context);
+          },
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(width * 0.03)),
           splashColor: Colors.red[300],
@@ -39,6 +131,7 @@ class _HomeState extends State<Home> {
       ),
       appBar: AppBar(
         backgroundColor: Colors.brown[800],
+        title: Text("Hello, Aniket"),
       ),
       body: ListView(children: [
         Container(

@@ -1,8 +1,10 @@
+import 'package:cleave_it/screens/friends.dart';
 import 'package:cleave_it/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'overview.dart';
 import 'routing.dart';
 import 'screens/account.dart';
+import 'screens/groups.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,6 +41,12 @@ class MyApp extends StatelessWidget {
           },
           accountScreen: (context) {
             return const AccountScreen();
+          },
+          friendScreen: (context) {
+            return const Friends();
+          },
+          groupScreen: (context) {
+            return const Groups();
           }
         });
   }
