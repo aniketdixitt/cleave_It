@@ -27,7 +27,7 @@ class _ChooseStateState extends State<ChooseState> {
           children: [
             Container(
               child: Image(
-                image: AssetImage('images/CLEAVE.png'),
+                image: AssetImage('images/cleave.png'),
               ),
             ),
             Container(

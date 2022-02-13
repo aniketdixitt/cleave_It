@@ -1,7 +1,8 @@
 import 'dart:async';
-
+// @dart=2.9
 import 'package:cleave_it/screens/friends.dart';
 import 'package:cleave_it/screens/home.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'choose.dart';
 import 'login.dart';
@@ -11,7 +12,9 @@ import 'screens/account.dart';
 import 'screens/groups.dart';
 import 'signup.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -104,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Container(
       color: Color(0xff1e0b00),
       child: Image(
-        image: AssetImage('images/CLEAVE.png'),
+        image: AssetImage('images/cleave.png'),
       ),
     );
   }

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "231067795964",
+    "project_id": "cleave-it",
+    "storage_bucket": "cleave-it.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:231067795964:android:da635df1a44c56c3853279",
+        "android_client_info": {
+          "package_name": "com.example.cleave_it"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "231067795964-9p3ttaho0uh55t54aa8f22raf8cnu9js.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwr0E8Ia6Y5qPTUOHB8mth1iWJZpgrqRI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "231067795964-9p3ttaho0uh55t54aa8f22raf8cnu9js.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

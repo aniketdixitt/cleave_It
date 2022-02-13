@@ -1,6 +1,10 @@
 import 'dart:ui';
 import 'package:cleave_it/routing.dart' as routing;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -11,6 +15,10 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   int selected = 1;
+  String name = "";
+  String email = "";
+  String password = "";
+  String number = "";
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -41,6 +49,10 @@ class _SignupPageState extends State<SignupPage> {
               ),
             ),
             TextField(
+              onChanged: (value) {
+                name = value;
+              },
+              style: TextStyle(color: Colors.green.shade400),
               decoration: InputDecoration(
                 label: Text("Full name"),
                 labelStyle: TextStyle(
@@ -77,6 +89,10 @@ class _SignupPageState extends State<SignupPage> {
                         child: Column(
                           children: [
                             TextField(
+                              onChanged: (value) {
+                                email = value;
+                              },
+                              style: TextStyle(color: Colors.green.shade400),
                               decoration: InputDecoration(
                                 label: Text("Your email address"),
                                 labelStyle: TextStyle(
@@ -97,6 +113,10 @@ class _SignupPageState extends State<SignupPage> {
                               height: height * 0.01,
                             ),
                             TextField(
+                              onChanged: (value) {
+                                password = value;
+                              },
+                              style: TextStyle(color: Colors.green.shade400),
                               obscureText: true,
                               decoration: InputDecoration(
                                 label: Text("Your password"),
@@ -128,7 +148,10 @@ class _SignupPageState extends State<SignupPage> {
                     value: selected,
                     items: [
                       DropdownMenuItem(
-                        child: Text("+91"),
+                        child: Text(
+                          "+91",
+                          style: TextStyle(color: Colors.green.shade400),
+                        ),
                         value: 1,
                       )
                     ],
@@ -139,8 +162,12 @@ class _SignupPageState extends State<SignupPage> {
                       child: Container(
                         padding: EdgeInsets.only(left: width * 0.02),
                         child: TextField(
+                          onChanged: (value) {
+                            number = value;
+                          },
+                          style: TextStyle(color: Colors.green.shade400),
                           decoration: InputDecoration(
-                            label: Text("Full name"),
+                            label: Text("Phone number"),
                             labelStyle: TextStyle(
                                 color: Colors.yellow.shade900,
                                 fontWeight: FontWeight.w400),
@@ -167,8 +194,36 @@ class _SignupPageState extends State<SignupPage> {
                 children: [
                   Container(
                     child: TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, routing.overView);
+                      onPressed: () async {
+                        try {
+                          final newUser = await FirebaseAuth.instance
+                              .createUserWithEmailAndPassword(
+                                  email: email, password: password);
+                          if (newUser != null) {
+                            final User? user =
+                                FirebaseAuth.instance.currentUser;
+                            final uid = user?.uid;
+                            var data = await FirebaseFirestore.instance
+                                .collection("Users")
+                                .doc(uid.toString())
+                                .set({
+                              "Name": name,
+                              "Email": email,
+                              "Password": password,
+                              "Phone": number,
+                              "ID": uid.toString()
+                            });
+                            Navigator.pushNamed(context, routing.overView);
+                            Fluttertoast.showToast(
+                                msg: "Signed in successfully!",
+                                toastLength: Toast.LENGTH_LONG);
+                          }
+                        } catch (e) {
+                          Fluttertoast.showToast(
+                              msg: e.toString(),
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM);
+                        }
                       },
                       style: TextButton.styleFrom(
                           primary: Colors.green[900],

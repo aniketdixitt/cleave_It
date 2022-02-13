@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cleave_it/routing.dart' as routing;
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -9,6 +11,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String email = "";
+  String password = "";
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -66,6 +70,10 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             TextField(
+              onChanged: (value) {
+                email = value;
+              },
+              style: TextStyle(color: Colors.green.shade400),
               decoration: InputDecoration(
                 focusedBorder: OutlineInputBorder(
                   borderSide:
@@ -90,6 +98,10 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             TextField(
+              onChanged: (value) {
+                password = value;
+              },
+              style: TextStyle(color: Colors.green.shade400),
               decoration: InputDecoration(
                 focusedBorder: OutlineInputBorder(
                   borderSide:
@@ -115,8 +127,23 @@ class _LoginPageState extends State<LoginPage> {
                       child: Container(
                         padding: EdgeInsets.only(top: width * 0.02),
                         child: TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, routing.overView);
+                          onPressed: () async {
+                            try {
+                              final user = FirebaseAuth.instance
+                                  .signInWithEmailAndPassword(
+                                      email: email, password: password);
+                              if (user != null) {
+                                Navigator.pushNamed(context, routing.overView);
+                                Fluttertoast.showToast(
+                                    msg: "Logged in successfully!",
+                                    toastLength: Toast.LENGTH_LONG);
+                              }
+                            } catch (e) {
+                              Fluttertoast.showToast(
+                                  msg: e.toString(),
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM);
+                            }
                           },
                           style: TextButton.styleFrom(
                               primary: Colors.green[900],
