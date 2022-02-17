@@ -1,7 +1,10 @@
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cleave_it/routing.dart' as routing;
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({Key? key}) : super(key: key);
@@ -11,6 +14,58 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
+  var ud;
+  final name = TextEditingController();
+
+  void getuser() async {
+    final User? user = await FirebaseAuth.instance.currentUser;
+    final uid = user?.uid;
+    ud = uid.toString();
+    //print(ud.toString());
+    //print("hi");
+    setState(() {});
+  }
+
+  _showDialog() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: Colors.brown[900],
+            title: Text(
+              'Enter new user name: ',
+              style: TextStyle(
+                  color: Colors.red[900],
+                  fontSize: MediaQuery.of(context).size.width * 0.06,
+                  fontWeight: FontWeight.w800),
+            ),
+            content: Container(
+              height: MediaQuery.of(context).size.height * 0.12,
+              child: TextField(
+                controller: name,
+                onChanged: (value) {},
+              ),
+            ),
+            actions: [
+              FlatButton(
+                onPressed: () async {
+                  await FirebaseFirestore.instance
+                      .collection("Users")
+                      .doc(ud)
+                      .update({"Name": name.toString()});
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  "Done",
+                  style: TextStyle(color: Colors.green[300]),
+                ),
+              ),
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -68,7 +123,8 @@ class _AccountScreenState extends State<AccountScreen> {
                         ],
                       ),
                       InkWell(
-                        onTap: () {
+                        onTap: () async {
+                          _showDialog();
                           setState(() {});
                         },
                         child: Container(
@@ -220,8 +276,13 @@ class _AccountScreenState extends State<AccountScreen> {
                       )
                     ],
                   ),
-                  onTap: () {
+                  onTap: () async {
+                    await FirebaseAuth.instance.signOut();
                     setState(() {});
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, routing.choosePage, (route) => false);
+                    Fluttertoast.showToast(
+                        msg: "Logged Out!", toastLength: Toast.LENGTH_LONG);
                   },
                 ),
                 Expanded(

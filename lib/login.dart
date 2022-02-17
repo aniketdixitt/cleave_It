@@ -98,6 +98,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             TextField(
+              obscureText: true,
               onChanged: (value) {
                 password = value;
               },
@@ -133,7 +134,8 @@ class _LoginPageState extends State<LoginPage> {
                                   .signInWithEmailAndPassword(
                                       email: email, password: password);
                               if (user != null) {
-                                Navigator.pushNamed(context, routing.overView);
+                                Navigator.pushNamedAndRemoveUntil(context,
+                                    routing.overView, (routing) => false);
                                 Fluttertoast.showToast(
                                     msg: "Logged in successfully!",
                                     toastLength: Toast.LENGTH_LONG);

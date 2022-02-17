@@ -211,11 +211,19 @@ class _SignupPageState extends State<SignupPage> {
                               "Email": email,
                               "Password": password,
                               "Phone": number,
-                              "ID": uid.toString()
+                              "ID": uid.toString(),
+                              "Self": 0,
+                              "Friends": 0,
+                              "Food": 0,
+                              "Rent": 0,
+                              "Groceries": 0,
+                              "Vehicle": 0,
+                              "Others": 0
                             });
-                            Navigator.pushNamed(context, routing.overView);
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, routing.loginPage, (routing) => false);
                             Fluttertoast.showToast(
-                                msg: "Signed in successfully!",
+                                msg: "Account created successfully!",
                                 toastLength: Toast.LENGTH_LONG);
                           }
                         } catch (e) {

@@ -1,6 +1,5 @@
 import 'dart:async';
 // @dart=2.9
-import 'package:cleave_it/screens/friends.dart';
 import 'package:cleave_it/screens/home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,7 @@ import 'login.dart';
 import 'overview.dart';
 import 'routing.dart';
 import 'screens/account.dart';
-import 'screens/groups.dart';
+import 'screens/transactions.dart';
 import 'signup.dart';
 
 void main() async {
@@ -50,12 +49,6 @@ class MyApp extends StatelessWidget {
           accountScreen: (context) {
             return const AccountScreen();
           },
-          friendScreen: (context) {
-            return const Friends();
-          },
-          groupScreen: (context) {
-            return const Groups();
-          },
           loginPage: (context) {
             return const LoginPage();
           },
@@ -64,6 +57,9 @@ class MyApp extends StatelessWidget {
           },
           choosePage: (context) {
             return const ChooseState();
+          },
+          transac: (context) {
+            return const Transactions();
           }
         });
   }
@@ -91,7 +87,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 5), () => Navigator.pushNamed(context, choosePage));
+    Timer(Duration(seconds: 3),
+        () => Navigator.pushReplacementNamed(context, choosePage));
   }
 
   @override

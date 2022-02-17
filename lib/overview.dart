@@ -2,13 +2,12 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:cleave_it/routing.dart';
-import 'package:cleave_it/screens/friends.dart';
-import 'package:cleave_it/screens/groups.dart';
 import 'package:cleave_it/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'routing.dart' as routing;
 import 'screens/account.dart';
+import 'screens/transactions.dart';
 
 class Overview extends StatefulWidget {
   const Overview({Key? key}) : super(key: key);
@@ -19,7 +18,7 @@ class Overview extends StatefulWidget {
 
 class _OverviewState extends State<Overview> {
   int _currentIndex = 0;
-  List screens = [Home(), Friends(), Groups(), AccountScreen()];
+  List screens = [Home(), Transactions(), AccountScreen()];
   @override
   _updateIndex(int value) {
     setState(() {
@@ -41,9 +40,10 @@ class _OverviewState extends State<Overview> {
           BottomNavigationBarItem(
               icon: Icon(Icons.analytics_outlined), label: "Overview"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.person_outlined), label: "Friends"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.people_alt_outlined), label: "Groups"),
+              icon: Icon(
+                Icons.monetization_on_outlined,
+              ),
+              label: "Transactions"),
           BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined), label: "Account"),
         ],

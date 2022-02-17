@@ -23,6 +23,20 @@ class _HomeState extends State<Home> {
   String password = "";
   String number = "";
   int money = 0;
+  String pay = "";
+  int nos = 1;
+  String cat = "";
+  int slf = 0;
+  int frnd = 0;
+  int food = 0;
+  int rent = 0;
+  int groc = 0;
+  int vehi = 0;
+  int others = 0;
+  int total = 0;
+  final text_mon = TextEditingController();
+  final text_decs = TextEditingController();
+  var ud;
 
   moneypay mp = moneypay.You;
 
@@ -45,7 +59,10 @@ class _HomeState extends State<Home> {
               child: Column(
                 children: [
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      pay = "You";
+                      Navigator.of(context).pop();
+                    },
                     style: TextButton.styleFrom(
                         primary: Colors.green[900],
                         backgroundColor: Colors.yellow[700],
@@ -61,7 +78,10 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      pay = "Friend";
+                      Navigator.of(context).pop();
+                    },
                     style: TextButton.styleFrom(
                         primary: Colors.green[900],
                         backgroundColor: Colors.yellow[700],
@@ -159,10 +179,12 @@ class _HomeState extends State<Home> {
               ],
               onSaved: (int? value) {
                 selected = value!;
+                nos = value + 1;
               },
               onChanged: (int? value) {
                 setState(() {
                   selected = value!;
+                  nos = value + 1;
                 });
               },
             ),
@@ -211,13 +233,13 @@ class _HomeState extends State<Home> {
                 ),
                 DropdownMenuItem(
                   child: Text(
-                    "Friends",
+                    "Vehicle",
                     style: TextStyle(
                         color: Colors.green[400],
                         fontSize: MediaQuery.of(context).size.width * 0.05,
                         fontWeight: FontWeight.w800),
                   ),
-                  value: "Friends",
+                  value: "Vehicle",
                 ),
                 DropdownMenuItem(
                   child: Text("Groceries",
@@ -246,10 +268,12 @@ class _HomeState extends State<Home> {
               ],
               onSaved: (String? value) {
                 selectcat = value!;
+                cat = value;
               },
               onChanged: (String? value) {
                 setState(() {
                   selectcat = value!;
+                  cat = value;
                 });
               },
             ),
@@ -270,8 +294,8 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    getuser();
     super.initState();
+    getuser();
   }
 
   void show(BuildContext context) {
@@ -313,8 +337,17 @@ class _HomeState extends State<Home> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          width: MediaQuery.of(context).size.width * 0.2,
+                          width: MediaQuery.of(context).size.width * 0.3,
                           child: TextField(
+                            controller: text_mon,
+                            onChanged: (value) {
+                              money = int.parse(value);
+                            },
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize:
+                                  MediaQuery.of(context).size.width * 0.08,
+                            ),
                             textAlign: TextAlign.center,
                             decoration: InputDecoration(
                                 hintText: "₹ 0",
@@ -329,7 +362,14 @@ class _HomeState extends State<Home> {
                         Container(
                             width: MediaQuery.of(context).size.width * 0.8,
                             child: TextField(
+                              controller: text_decs,
+                              onChanged: (value) {},
                               textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize:
+                                    MediaQuery.of(context).size.width * 0.05,
+                              ),
                               decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.monetization_on),
                                 hintText: "What is this expense for?",
@@ -474,7 +514,10 @@ class _HomeState extends State<Home> {
                               elevation:
                                   MediaQuery.of(context).size.width * 0.03,
                               shadowColor: Colors.red[900]),
-                          onPressed: () {},
+                          onPressed: () {
+                            calculation();
+                            Navigator.of(context).pop();
+                          },
                           child: Text(
                             "Create Expense",
                             style: TextStyle(
@@ -495,6 +538,9 @@ class _HomeState extends State<Home> {
   void getuser() async {
     final User? user = await FirebaseAuth.instance.currentUser;
     final uid = user?.uid;
+    ud = uid.toString();
+    //print(ud.toString());
+    //print("hi");
     var coll = FirebaseFirestore.instance.collection("Users");
     var querysnap = await coll.get();
     for (var qu in querysnap.docs) {
@@ -505,10 +551,64 @@ class _HomeState extends State<Home> {
         email = data["Email"];
         password = data["Password"];
         number = data["Phone"];
+        slf = data["Self"].toInt();
+        frnd = data["Friends"].toInt();
+        food = data["Food"].toInt();
+        rent = data["Rent"].toInt();
+        groc = data["Groceries"].toInt();
+        vehi = data["Vehicle"].toInt();
+        others = data["Others"].toInt();
+
+        total = food + rent + groc + vehi + others;
       }
     }
+    setState(() {});
     print(uid.toString());
     print(email);
+  }
+
+  void calculation() async {
+    var total_split = money / nos;
+    int mon = 0;
+    if (cat == "Food")
+      mon = food;
+    else if (cat == "Groceries")
+      mon = groc;
+    else if (cat == "Vehicle")
+      mon = vehi;
+    else if (cat == "Rent")
+      mon = rent;
+    else if (cat == "Others") mon = others;
+    getuser();
+
+    print(pay);
+
+    if (pay == "Friend") {
+      var splt = frnd + total_split;
+      await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(ud)
+          .update({"Friends": splt, cat: total_split + mon});
+      //print(splt + slf);
+      //print(slf);
+      //print(splt);
+    } else if (pay == "You") {
+      var splt = (money - total_split) + slf;
+
+      await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(ud)
+          .update({"Self": splt, cat: total_split + mon});
+    }
+
+    await FirebaseFirestore.instance.collection(ud).add({
+      "Date": DateFormat("yyyy-MM-dd").format(DateTime.now()),
+      "Time": DateFormat("HH:mm:ss").format(DateTime.now()),
+      "Day": DateFormat("EEEEE").format(DateTime.now()),
+      "Description": text_decs.text,
+      "Money": text_mon.text,
+      "Paidby": pay,
+    });
   }
 
   @override
@@ -573,7 +673,7 @@ class _HomeState extends State<Home> {
                                   fontStyle: FontStyle.italic),
                             ),
                             Text(
-                              "₹ 0",
+                              '₹ ' + (slf - frnd).toString(),
                               style: TextStyle(
                                   color: Colors.green[300],
                                   fontSize: width * 0.1),
@@ -637,7 +737,7 @@ class _HomeState extends State<Home> {
                                   fontWeight: FontWeight.w500),
                             ),
                             Text(
-                              "₹ 0",
+                              '₹ ' + slf.toString(),
                               style: TextStyle(
                                   fontSize: width * 0.06,
                                   fontWeight: FontWeight.w800,
@@ -664,7 +764,7 @@ class _HomeState extends State<Home> {
                                   fontWeight: FontWeight.w500),
                             ),
                             Text(
-                              "₹ 0",
+                              '₹ ' + frnd.toString(),
                               style: TextStyle(
                                   fontSize: width * 0.06,
                                   fontWeight: FontWeight.w800,
@@ -701,7 +801,7 @@ class _HomeState extends State<Home> {
                                     color: Colors.white),
                               ),
                               Text(
-                                "₹ 0",
+                                '₹ ' + total.toString(),
                                 style: TextStyle(
                                     fontSize: width * 0.05,
                                     fontWeight: FontWeight.w500,
@@ -716,11 +816,11 @@ class _HomeState extends State<Home> {
                         Flexible(
                           child: PieChart(
                             dataMap: {
-                              "Food": 5,
-                              "Vehicle": 3,
-                              "Groceries": 4,
-                              "Rent": 2,
-                              "Others": 2,
+                              "Food": food.toDouble(),
+                              "Vehicle": vehi.toDouble(),
+                              "Groceries": groc.toDouble(),
+                              "Rent": rent.toDouble(),
+                              "Others": others.toDouble(),
                             },
                             animationDuration: Duration(milliseconds: 1000),
                             chartLegendSpacing: width * 0.03,
